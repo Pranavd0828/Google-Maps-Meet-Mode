@@ -16,7 +16,7 @@ function App() {
   });
 
   // State: View Mode ('standard' = Google Maps, 'meet' = Our App)
-  const [viewMode, setViewMode] = useState('meet');
+  const [viewMode, setViewMode] = useState('standard');
 
   // State: Multi-User Support (V2)
   const [users, setUsers] = useState([

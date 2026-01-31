@@ -75,13 +75,11 @@ const GoogleMapsShell = ({ viewMode, onToggleMeetMode }) => {
                 {viewMode === 'meet' ? (
                     <>
                         <X className="w-4 h-4" />
-                        <span className="hidden sm:inline font-semibold text-sm">Close Meet Mode</span>
+                        <span className="font-semibold text-sm">Close Meet Mode</span>
                     </>
                 ) : (
                     <>
-                        {/* Mobile: Icon Only. Desktop: Text */}
-                        <span className="sm:hidden"><Users className="w-5 h-5" /></span>
-                        <span className="hidden sm:inline font-medium">Try Meet Mode</span>
+                        <span className="font-medium">Try Meet Mode</span>
                     </>
                 )}
             </button>
