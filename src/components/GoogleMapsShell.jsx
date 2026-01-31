@@ -64,7 +64,7 @@ const GoogleMapsShell = ({ viewMode, onToggleMeetMode }) => {
                             ))}
                         </div>
                         {/* Right Fade Gradient (Desktop Visual Cue) */}
-                        <div className="absolute right-0 top-0 bottom-0 w-12 bg-gradient-to-l from-white via-white/80 to-transparent pointer-events-none z-10 sm:block hidden rounded-r-[24px]" />
+                        <div className="absolute right-0 top-0 bottom-0 w-24 bg-gradient-to-l from-white via-white/70 to-transparent pointer-events-none z-10 sm:block hidden rounded-r-[24px]" />
                     </div>
                 </div>
             </div>
