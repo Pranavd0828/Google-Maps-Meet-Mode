@@ -168,24 +168,25 @@ function App() {
   }
 
   return (
-    <div className="flex h-screen w-full overflow-hidden bg-white font-sans text-gray-900 flex-col md:flex-row relative">
+    <div className="flex flex-col md:flex-row h-[100dvh] w-full overflow-hidden bg-white font-sans text-gray-900 relative">
 
-      {/* 1. The Google Maps Shell (Floating Controls: Search Bar + Buttons) */}
-      {/* This sits on top of everything (z-50) because it's the global UI layer */}
+      {/* 1. Global Shell (Overlays) */}
       <GoogleMapsShell viewMode={viewMode} onToggleMeetMode={toggleMeetMode} />
 
-      {/* 2. Sidebar Container (The "Bookshelf") */}
-      {/* Mobile: Bottom 55% (when active). Desktop: Left 408px (when active). */}
+      {/* 2. Sidebar Container (Strict Split) */}
+      {/* Mobile: Bottom 55dvh. Desktop: Left 400px. No overlap. */}
       <div
         className={`relative z-20 bg-white shadow-xl transition-all duration-500 ease-in-out overflow-hidden
           order-2 md:order-1
+          flex-none
           w-full md:w-auto
           ${viewMode === 'meet'
-            ? 'h-[55%] md:h-full md:basis-[408px]'
-            : 'h-0 md:h-full md:basis-0 md:w-0'
+            ? 'h-[55dvh] md:h-full md:w-[400px]'
+            : 'h-0 md:h-full md:w-0'
           }`}
       >
-        <div className="h-full w-full md:w-[408px]">
+        <div className="h-full w-full md:w-[400px]">
+          {/* Pass explicit height to Sidebar if needed, but h-full works */}
           <Sidebar
             users={users}
             onUpdateUserPos={handleUpdateUserPos}
@@ -202,14 +203,14 @@ function App() {
         </div>
       </div>
 
-      {/* 3. Map Container (The "Poster") */}
-      {/* Mobile: Top 45% (when active). Desktop: Fills remaining space. */}
-      {/* Crucial: It NEVER overlaps the Sidebar. It shrinks to fit. */}
+      {/* 3. Map Container (Strict Split) */}
+      {/* Mobile: Top 45dvh. Desktop: Remaining width. */}
       <div
         className={`relative z-0 bg-gray-100 transition-all duration-500 ease-in-out
            order-1 md:order-2
-           w-full md:flex-1
-           ${viewMode === 'meet' ? 'h-[45%] md:h-full' : 'h-full'}`}
+           flex-none md:flex-auto
+           w-full md:w-auto
+           ${viewMode === 'meet' ? 'h-[45dvh] md:h-full' : 'h-[100dvh]'}`}
       >
         <MapLayout
           users={users}
