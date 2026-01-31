@@ -50,9 +50,9 @@ const GoogleMapsShell = ({ viewMode, onToggleMeetMode }) => {
                         </div>
                     </div>
 
-                    {/* Category Pills - Responsive (Full Bleed Scroll on Mobile + Fade on Desktop) */}
-                    <div className="relative w-screen -ml-[12px] sm:ml-0 sm:w-[392px]">
-                        <div className="flex gap-3 overflow-x-auto w-full pl-[12px] pr-[12px] sm:pl-1 sm:pr-[40px] scrollbar-hide pt-1">
+                    {/* Category Pills - Responsive (Full Width Scroll) */}
+                    <div className="relative w-screen -ml-[12px] sm:ml-0 sm:w-full">
+                        <div className="flex gap-3 overflow-x-auto w-full pl-[12px] pr-[12px] sm:pl-1 sm:pr-4 scrollbar-hide pt-1">
                             {['Restaurants', 'Hotels', 'Things to do', 'Museums', 'Transit', 'Pharmacies', 'ATMs'].map((cat, i) => (
                                 <button
                                     key={i}
@@ -63,8 +63,6 @@ const GoogleMapsShell = ({ viewMode, onToggleMeetMode }) => {
                                 </button>
                             ))}
                         </div>
-                        {/* Right Fade Gradient (Desktop Visual Cue) */}
-                        <div className="absolute right-0 top-0 bottom-0 w-24 bg-gradient-to-l from-white via-white/70 to-transparent pointer-events-none z-10 sm:block hidden rounded-r-[24px]" />
                     </div>
                 </div>
             </div>
