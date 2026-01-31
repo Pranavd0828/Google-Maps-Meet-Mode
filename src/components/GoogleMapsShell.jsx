@@ -24,20 +24,23 @@ const GoogleMapsShell = ({ viewMode, onToggleMeetMode }) => {
                 {/* Top Left Search Stack */}
                 <div className="absolute top-[12px] left-[12px] pointer-events-auto flex flex-col gap-3">
 
-                    {/* Search Bar - Pixel Perfect Match */}
+                    {/* Search Bar - Pixel Perfect Match & Responsive */}
                     <div
-                        className="bg-white rounded-[24px] w-[392px] h-[48px] flex items-center px-4 transition-all duration-200"
+                        className="bg-white rounded-[24px] w-[calc(100vw-175px)] sm:w-[392px] h-[48px] flex items-center px-4 transition-all duration-200"
                         style={{ boxShadow: SB_SHADOW }}
                     >
-                        <div className="p-2 hover:bg-gray-100 rounded-full cursor-pointer transition-colors mr-2">
+                        <div className="p-2 hover:bg-gray-100 rounded-full cursor-pointer transition-colors mr-2 hidden sm:block">
                             <Menu className="w-[20px] h-[20px] text-[#5f6368]" />
+                        </div>
+                        <div className="p-2 hover:bg-gray-100 rounded-full cursor-pointer transition-colors mr-1 sm:hidden">
+                            <Search className="w-[20px] h-[20px] text-[#5f6368]" />
                         </div>
                         <input
                             type="text"
                             placeholder="Search Google Maps"
-                            className="flex-1 text-[15px] outline-none text-[#202124] placeholder:text-[#5f6368] font-normal font-sans bg-transparent"
+                            className="flex-1 text-[15px] outline-none text-[#202124] placeholder:text-[#5f6368] font-normal font-sans bg-transparent min-w-0"
                         />
-                        <div className="flex items-center gap-1 border-l border-[#dadce0] pl-3 ml-1">
+                        <div className="flex items-center gap-1 border-l border-[#dadce0] pl-3 ml-1 hidden sm:flex">
                             <div className="p-2 hover:bg-gray-100 rounded-full cursor-pointer transition-colors">
                                 <Search className="w-[20px] h-[20px] text-[#1a73e8]" strokeWidth={2.5} />
                             </div>
@@ -47,13 +50,13 @@ const GoogleMapsShell = ({ viewMode, onToggleMeetMode }) => {
                         </div>
                     </div>
 
-                    {/* Category Pills - Pixel Perfect Match */}
-                    <div className="flex gap-3 overflow-x-auto w-[calc(100vw-450px)] scrollbar-hide pt-1 pl-1">
+                    {/* Category Pills - Responsive */}
+                    <div className="flex gap-3 overflow-x-auto w-[calc(100vw-24px)] sm:w-[392px] scrollbar-hide pt-1 pl-1">
                         {['Restaurants', 'Hotels', 'Things to do', 'Museums', 'Transit', 'Pharmacies', 'ATMs'].map((cat, i) => (
                             <button
                                 key={i}
-                                className="bg-white px-[14px] py-[6px] rounded-[18px] text-[14px] font-medium text-[#3c4043] hover:bg-[#f1f3f4] whitespace-nowrap pointer-events-auto transition-colors duration-200 border border-transparent"
-                                style={{ boxShadow: "0 1px 2px rgba(60,64,67,0.3), 0 2px 6px 2px rgba(60,64,67,0.15)" }} // Slightly deeper shadow for pills
+                                className="bg-white px-[14px] py-[6px] rounded-[18px] text-[14px] font-medium text-[#3c4043] hover:bg-[#f1f3f4] whitespace-nowrap pointer-events-auto transition-colors duration-200 border border-transparent flex-shrink-0"
+                                style={{ boxShadow: "0 1px 2px rgba(60,64,67,0.3), 0 2px 6px 2px rgba(60,64,67,0.15)" }}
                             >
                                 {cat}
                             </button>
