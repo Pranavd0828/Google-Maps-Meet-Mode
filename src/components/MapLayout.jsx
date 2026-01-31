@@ -5,7 +5,7 @@ import { GoogleMap, Marker, Polyline, DirectionsRenderer } from '@react-google-m
 const mapContainerStyle = { width: '100%', height: '100%' };
 const defaultCenter = { lat: 40.7128, lng: -74.0060 };
 
-const MapLayout = ({ users, results, hoveredResultId, setMapInstance }) => {
+const MapLayout = ({ users, results, hoveredResultId, setMapInstance, viewMode }) => {
     const [map, setMap] = useState(null);
     const [userDirections, setUserDirections] = useState({}); // { userId: directionResult }
 
@@ -35,8 +35,11 @@ const MapLayout = ({ users, results, hoveredResultId, setMapInstance }) => {
         const validUsers = users.filter(u => u.pos);
         if (validUsers.length === 0 && results.length === 0) return;
 
-        // Debounce to allow UI transitions to finish
+        // Debounce to allow UI transitions (500ms CSS slide) to finish
         const timerId = setTimeout(() => {
+            // Force Map Resize so it acknowledges the new 45% height
+            window.google.maps.event.trigger(map, "resize");
+
             const bounds = new window.google.maps.LatLngBounds();
             validUsers.forEach(u => bounds.extend(u.pos));
             results.forEach((r) => bounds.extend(r.geometry.location));
@@ -55,11 +58,11 @@ const MapLayout = ({ users, results, hoveredResultId, setMapInstance }) => {
                     map.setZoom(15);
                 }
             });
-        }, 300);
+        }, 550); // Wait 550ms for CSS transition (500ms) to complete
 
         return () => clearTimeout(timerId);
 
-    }, [map, users, results]);
+    }, [map, users, results, viewMode]);
 
     const hoveredResult = useMemo(() =>
         results.find(r => r.place_id === hoveredResultId),

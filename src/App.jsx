@@ -217,6 +217,7 @@ function App() {
           results={results}
           hoveredResultId={hoveredResultId}
           setMapInstance={setMapInstance}
+          viewMode={viewMode}
         />
       </div>
     </div>
