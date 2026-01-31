@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Menu, Search, X, Mic, MapPin, ArrowRight } from 'lucide-react';
+import { Menu, Search, X, Mic, MapPin, ArrowRight, Users } from 'lucide-react';
 
 const GoogleMapsShell = ({ viewMode, onToggleMeetMode }) => {
 
@@ -26,7 +26,7 @@ const GoogleMapsShell = ({ viewMode, onToggleMeetMode }) => {
 
                     {/* Search Bar - Pixel Perfect Match & Responsive */}
                     <div
-                        className="bg-white rounded-[24px] w-[calc(100vw-175px)] sm:w-[392px] h-[48px] flex items-center px-4 transition-all duration-200"
+                        className="bg-white rounded-[24px] w-[calc(100vw-70px)] sm:w-[392px] h-[48px] flex items-center px-4 transition-all duration-200"
                         style={{ boxShadow: SB_SHADOW }}
                     >
                         <div className="p-2 hover:bg-gray-100 rounded-full cursor-pointer transition-colors mr-2 hidden sm:block">
@@ -73,12 +73,13 @@ const GoogleMapsShell = ({ viewMode, onToggleMeetMode }) => {
                 {viewMode === 'meet' ? (
                     <>
                         <X className="w-4 h-4" />
-                        <span className="font-semibold text-sm">Close Meet Mode</span>
+                        <span className="hidden sm:inline font-semibold text-sm">Close Meet Mode</span>
                     </>
                 ) : (
                     <>
-                        {/* Simulation of the "Sign In" button look, but repurposed */}
-                        <span className="font-medium">Try Meet Mode</span>
+                        {/* Mobile: Icon Only. Desktop: Text */}
+                        <span className="sm:hidden"><Users className="w-5 h-5" /></span>
+                        <span className="hidden sm:inline font-medium">Try Meet Mode</span>
                     </>
                 )}
             </button>
