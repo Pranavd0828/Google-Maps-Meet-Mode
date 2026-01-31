@@ -185,35 +185,33 @@ function App() {
       {/* 1. Global Shell (Overlays) */}
       <GoogleMapsShell viewMode={viewMode} onToggleMeetMode={toggleMeetMode} />
 
-      {/* 2. Sidebar Container (Strict Split) */}
-      {/* Mobile: Bottom 55dvh. Desktop: Left 400px. No overlap. */}
-      <div
-        className={`relative z-20 bg-white shadow-xl overflow-hidden
+      {/* 2. Sidebar Container (Strict Split) - Only Render in Meet Mode */}
+      {viewMode === 'meet' && (
+        <div
+          className="relative z-20 bg-white shadow-xl overflow-hidden
           order-2 md:order-1
           flex-none
           w-full md:w-auto
-          ${viewMode === 'meet'
-            ? 'h-[55dvh] md:h-full md:w-[400px]'
-            : 'h-0 md:h-full md:w-0'
-          }`}
-      >
-        <div className="h-full w-full md:w-[400px]">
-          {/* Pass explicit height to Sidebar if needed, but h-full works */}
-          <Sidebar
-            users={users}
-            onUpdateUserPos={handleUpdateUserPos}
-            onAddUser={handleAddUser}
-            onRemoveUser={handleRemoveUser}
-            isCalculating={isCalculating}
-            onCalculate={handleCalculate}
-            results={results}
-            hoveredResultId={hoveredResultId}
-            setHoveredResultId={setHoveredResultId}
-            category={category}
-            setCategory={setCategory}
-          />
+          h-[55dvh] md:h-full md:w-[400px]"
+        >
+          <div className="h-full w-full md:w-[400px]">
+            {/* Pass explicit height to Sidebar if needed, but h-full works */}
+            <Sidebar
+              users={users}
+              onUpdateUserPos={handleUpdateUserPos}
+              onAddUser={handleAddUser}
+              onRemoveUser={handleRemoveUser}
+              isCalculating={isCalculating}
+              onCalculate={handleCalculate}
+              results={results}
+              hoveredResultId={hoveredResultId}
+              setHoveredResultId={setHoveredResultId}
+              category={category}
+              setCategory={setCategory}
+            />
+          </div>
         </div>
-      </div>
+      )}
 
       {/* 3. Map Container (Strict Split) */}
       {/* Mobile: Top 45dvh. Desktop: Remaining width. */}
