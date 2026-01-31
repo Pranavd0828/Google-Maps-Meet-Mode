@@ -12,7 +12,8 @@ const MapLayout = ({ users, results, hoveredResultId, setMapInstance }) => {
     const options = useMemo(() => ({
         disableDefaultUI: false,
         zoomControl: true,
-        zoomControlOptions: { position: window.google.maps.ControlPosition.RIGHT_CENTER }, // Move zoom up to avoid mobile sheet
+        // Move zoom to RIGHT_TOP so it appears in the top-right corner (visible area on mobile)
+        zoomControlOptions: { position: window.google.maps.ControlPosition.RIGHT_TOP },
         mapTypeControl: false,
         streetViewControl: false,
         fullscreenControl: false,
