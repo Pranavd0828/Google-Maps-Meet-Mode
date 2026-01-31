@@ -41,8 +41,8 @@ const MapLayout = ({ users, results, hoveredResultId, setMapInstance }) => {
 
             // 3. Fit Bounds with Mobile Safe Area
             const isMobile = window.innerWidth < 768;
-            // Mobile: Sheet covers ~55%. We use 60% padding to be safe.
-            const bottomPadding = isMobile ? (window.innerHeight * 0.6) : 80;
+            // Mobile: Sheet covers ~55%. We use 75% padding to FORCE points into the top 25% of screen.
+            const bottomPadding = isMobile ? (window.innerHeight * 0.75) : 80;
 
             map.fitBounds(bounds, {
                 top: 60,
