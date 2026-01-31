@@ -11,10 +11,10 @@ const GoogleMapsShell = ({ viewMode, onToggleMeetMode }) => {
         }`;
 
     // Toggle Button: Positioned exactly where "Sign In" would be, but functional
-    const toggleButtonClass = `pointer-events-auto absolute top-[12px] right-[14px] z-50 transition-all duration-500 flex items-center gap-2 cursor-pointer 
+    const toggleButtonClass = `pointer-events-auto absolute top-[12px] right-[12px] z-50 transition-all duration-300 flex items-center gap-2 cursor-pointer h-[48px]
         ${viewMode === 'meet'
-            ? 'bg-white text-gray-700 shadow-md border border-gray-200 hover:bg-gray-50 px-4 py-2 rounded-full right-[440px]'
-            : 'bg-[#1a73e8] hover:bg-[#1557b0] text-white px-5 py-2 rounded-[4px] font-medium text-sm tracking-wide shadow-sm'
+            ? 'bg-white text-gray-700 shadow-md border border-gray-200 hover:bg-gray-50 px-4 rounded-full right-[440px]'
+            : 'bg-[#1a73e8] hover:bg-[#1557b0] text-white px-6 rounded-full font-medium text-[15px] tracking-tight shadow-md'
         }`;
 
     return (
