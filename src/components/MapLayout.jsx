@@ -29,32 +29,37 @@ const MapLayout = ({ users, results, hoveredResultId, setMapInstance }) => {
         // Do not fit if empty
         if (validUsers.length === 0 && results.length === 0) return;
 
-        const bounds = new window.google.maps.LatLngBounds();
+        // Debounce/Delay to allow mobile keyboard to close & viewport to settle
+        const timerId = setTimeout(() => {
+            const bounds = new window.google.maps.LatLngBounds();
 
-        // 1. Include Users
-        validUsers.forEach(u => bounds.extend(u.pos));
+            // 1. Include Users
+            validUsers.forEach(u => bounds.extend(u.pos));
 
-        // 2. Include Results (if any)
-        results.forEach((r) => bounds.extend(r.geometry.location));
+            // 2. Include Results
+            results.forEach((r) => bounds.extend(r.geometry.location));
 
-        // 3. Fit Bounds with Mobile Safe Area
-        const isMobile = window.innerWidth < 768; // Tailwind 'md' breakpoint
-        const bottomPadding = isMobile ? (window.innerHeight * 0.55 + 20) : 80; // Mobile: Sheet covers 55% + 20px buffer
+            // 3. Fit Bounds with Mobile Safe Area
+            const isMobile = window.innerWidth < 768;
+            // Mobile: Sheet covers ~55%. We use 60% padding to be safe.
+            const bottomPadding = isMobile ? (window.innerHeight * 0.6) : 80;
 
-        map.fitBounds(bounds, {
-            top: 60,   // Top bar buffer
-            right: 50,
-            bottom: bottomPadding,
-            left: 50
-        });
+            map.fitBounds(bounds, {
+                top: 60,
+                right: 50,
+                bottom: bottomPadding,
+                left: 50
+            });
 
-        // Handle single-point extreme zoom
-        const listener = google.maps.event.addListenerOnce(map, "idle", () => {
-            if (map.getZoom() > 15) {
-                map.setZoom(15);
-            }
-        });
-        return () => google.maps.event.removeListener(listener);
+            // Handle single-point extreme zoom
+            const listener = google.maps.event.addListenerOnce(map, "idle", () => {
+                if (map.getZoom() > 15) {
+                    map.setZoom(15);
+                }
+            });
+        }, 300); // 300ms delay
+
+        return () => clearTimeout(timerId);
 
     }, [map, users, results]);
 
