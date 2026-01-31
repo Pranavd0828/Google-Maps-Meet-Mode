@@ -4,15 +4,20 @@ import { GoogleMap, Marker, Polyline, DirectionsRenderer } from '@react-google-m
 
 const mapContainerStyle = { width: '100%', height: '100%' };
 const defaultCenter = { lat: 40.7128, lng: -74.0060 };
-const options = {
-    disableDefaultUI: false, zoomControl: true, mapTypeControl: false,
-    streetViewControl: false, fullscreenControl: false,
-    styles: [{ featureType: 'poi', elementType: 'labels', stylers: [{ visibility: 'off' }] }]
-};
 
 const MapLayout = ({ users, results, hoveredResultId, setMapInstance }) => {
     const [map, setMap] = useState(null);
     const [userDirections, setUserDirections] = useState({}); // { userId: directionResult }
+
+    const options = useMemo(() => ({
+        disableDefaultUI: false,
+        zoomControl: true,
+        zoomControlOptions: { position: window.google.maps.ControlPosition.RIGHT_CENTER }, // Move zoom up to avoid mobile sheet
+        mapTypeControl: false,
+        streetViewControl: false,
+        fullscreenControl: false,
+        styles: [{ featureType: 'poi', elementType: 'labels', stylers: [{ visibility: 'off' }] }]
+    }), []);
 
     const onLoad = useCallback((map) => {
         setMap(map);
