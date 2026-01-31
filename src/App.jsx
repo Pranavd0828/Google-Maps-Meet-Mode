@@ -18,10 +18,18 @@ function App() {
   // State: View Mode ('standard' = Google Maps, 'meet' = Our App)
   const [viewMode, setViewMode] = useState('standard');
 
+  // State: Multi-User Support (V2)
+  const [users, setUsers] = useState([
+    { id: 'you', label: 'You', color: '#1a73e8', pos: null },
+    { id: 'friend-1', label: 'Friend 1', color: '#ea4335', pos: null }
+  ]);
+
+  // Legacy mapping for compatibility (temporary)
+  const userA = users[0].pos;
+  const userB = users[1] ? users[1].pos : null;
+
   const [isCalculating, setIsCalculating] = useState(false);
   const [results, setResults] = useState([]);
-  const [userA, setUserA] = useState(null);
-  const [userB, setUserB] = useState(null);
   const [hoveredResultId, setHoveredResultId] = useState(null);
   const [category, setCategory] = useState('restaurant');
 
@@ -33,10 +41,11 @@ function App() {
   };
 
   const handleCalculate = useCallback(async () => {
-    if (!userA || !userB || !mapInstance) return;
-    setIsCalculating(true);
+    // Only calculate if we have at least 2 users with positions
+    const validUsers = users.filter(u => u.pos !== null);
+    if (validUsers.length < 2) return;
 
-    // Clear previous results
+    setIsCalculating(true);
     setResults([]);
 
     // Safety timeout to prevent infinite buffering
@@ -47,12 +56,52 @@ function App() {
     try {
       // Race the fairness engine against a 15s timeout
       const fairVenues = await Promise.race([
-        runFairnessEngine(userA, userB, mapInstance, category),
+        runFairnessEngine(validUsers, mapInstance, category),
         timeoutPromise
       ]);
       setResults(fairVenues);
     } catch (error) {
       console.error("Calculation failed", error);
+
+      // 1. EXPIRY ERROR (80-Day Limit)
+      if (error.message === 'PROJECT_EXPIRED') {
+        setResults([{
+          place_id: 'project-expired',
+          name: 'Trial Period Expired',
+          vicinity: 'The 80-day trial for this app has ended. No more searches allowed.',
+          rating: 0,
+          user_ratings_total: 0,
+          price_level: 0,
+          geometry: { location: { lat: (userA.lat + userB.lat) / 2, lng: (userA.lng + userB.lng) / 2 } },
+          photos: [],
+          fallbackImage: 'https://images.unsplash.com/photo-1533035353717-3f6a98939cb4?q=80&w=400', // Time/Clock image
+          durationAString: 'Ended',
+          durationBString: 'Ended',
+          travelTimes: [],
+          types: ['point_of_interest']
+        }]);
+        return;
+      }
+
+      // 2. DAILY QUOTA ERROR
+      if (error.message === 'DAILY_QUOTA_EXCEEDED') {
+        setResults([{
+          place_id: 'quota-limit',
+          name: 'Daily Limit Reached',
+          vicinity: 'You have used your 100 free searches for today.',
+          rating: 0,
+          user_ratings_total: 0,
+          price_level: 0,
+          geometry: { location: { lat: (userA.lat + userB.lat) / 2, lng: (userA.lng + userB.lng) / 2 } },
+          photos: [],
+          fallbackImage: 'https://images.unsplash.com/photo-1623018035782-b269248df916?q=80&w=400', // Lock/Stop image
+          durationAString: 'Limit',
+          durationBString: 'Hit',
+          travelTimes: [], // No badges
+          types: ['point_of_interest']
+        }]);
+        return;
+      }
 
       // FALLBACK: Show Geographic Midpoint
       const midLat = (userA.lat + userB.lat) / 2;
@@ -77,14 +126,34 @@ function App() {
     } finally {
       setIsCalculating(false);
     }
-  }, [userA, userB, mapInstance, category]);
+  }, [users, mapInstance, category, userA, userB]); // userA, userB added for fallback logic
 
-  // Auto-trigger calculation when category changes
-  useEffect(() => {
-    if (userA && userB && mapInstance) {
-      handleCalculate();
-    }
-  }, [category, handleCalculate]);
+  // Manual calculation only (per user request)
+  // We explicitly Removed the auto-calc useEffect here to prevent "finding" while adding friends.
+
+  const handleAddUser = () => {
+    const nextId = users.length;
+    const colors = ['#fbbc04', '#34a853', '#a142f4', '#f06292', '#26c6da']; // Google-ish palette
+    const color = colors[(nextId - 2) % colors.length];
+
+    setUsers([
+      ...users,
+      { id: `friend-${nextId}`, label: `Friend ${nextId}`, color: color, pos: null }
+    ]);
+  };
+
+  const handleRemoveUser = (indexToRemove) => {
+    if (users.length <= 2) return; // Min 2 users
+    setUsers(users.filter((_, idx) => idx !== indexToRemove));
+  };
+
+  const handleUpdateUserPos = (index, newPos) => {
+    setUsers(prev => {
+      const next = [...prev];
+      next[index] = { ...next[index], pos: newPos };
+      return next;
+    });
+  };
 
   if (loadError) {
     return <div className="flex h-screen items-center justify-center text-red-500">Error loading Google Maps</div>;
@@ -110,10 +179,10 @@ function App() {
           }`}
       >
         <Sidebar
-          userA={userA}
-          setUserA={setUserA}
-          userB={userB}
-          setUserB={setUserB}
+          users={users}
+          onUpdateUserPos={handleUpdateUserPos}
+          onAddUser={handleAddUser}
+          onRemoveUser={handleRemoveUser}
           isCalculating={isCalculating}
           onCalculate={handleCalculate}
           results={results}
@@ -129,8 +198,7 @@ function App() {
           Actually, Google Maps keeps the map static and slides panels over. We do the same. */}
       <div className="flex-1 relative h-full w-full">
         <MapLayout
-          userA={userA}
-          userB={userB}
+          users={users}
           results={results}
           hoveredResultId={hoveredResultId}
           setMapInstance={setMapInstance}
