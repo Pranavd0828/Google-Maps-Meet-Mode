@@ -35,7 +35,27 @@ $$Score = (Max(T) \times 0.7) + (\sigma(T) \times 0.3)$$
 
 ---
 
-## 3. Known Edge Cases (Version 2.1 Scope)
+## 3. Frontend Architecture & UX
+### Mobile-First "Split View"
+To solve the challenge of displaying both map and list data on small screens, we implemented a responsive **Split View** pattern:
+*   **Desktop:** Traditional Sidebar (Left) + Full Map (Right).
+*   **Mobile:** Bottom Sheet (Height 55%) + Visible Map (Top 45%).
+    *   *Implementation:* CSS Grid/Flexbox with `translate` transitions ensures performance (60fps) even on low-end devices.
+    *   *Auto-Fit:* The map automatically adjusts bounds (`fitBounds`) to ensure all user markers and results are visible within the "Safe Area" of the viewport.
+
+---
+
+## 4. Deployment & Infrastructure
+*   **Hosting:** GitHub Pages (Static hosting).
+*   **CI/CD:** Automated via `gh-pages` npm script.
+*   **Security:**
+    *   **Client-Side Keys:** The Google Maps API Key is exposed in the build (standard for static sites).
+    *   **Protection:** Security is enforced via **HTTP Referrer Restrictions** in Google Cloud Console. Usage is strictly whitelisted to `pranavd0828.github.io` and `localhost`.
+    *   **Quotas:** Client-side logic prevents runaway costs (Daily Limit: 100, Hard Expiry: April 2026).
+
+---
+
+## 5. Known Edge Cases (Version 2.1 Scope)
 
 ### Unaccounted Scenarios:
 1.  **International Dateline:**
