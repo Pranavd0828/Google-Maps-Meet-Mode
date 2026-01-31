@@ -37,8 +37,16 @@ const MapLayout = ({ users, results, hoveredResultId, setMapInstance }) => {
         // 2. Include Results (if any)
         results.forEach((r) => bounds.extend(r.geometry.location));
 
-        // 3. Fit Bounds
-        map.fitBounds(bounds, { padding: 80 }); // Increased padding for better visibility
+        // 3. Fit Bounds with Mobile Safe Area
+        const isMobile = window.innerWidth < 768; // Tailwind 'md' breakpoint
+        const bottomPadding = isMobile ? (window.innerHeight * 0.55 + 20) : 80; // Mobile: Sheet covers 55% + 20px buffer
+
+        map.fitBounds(bounds, {
+            top: 60,   // Top bar buffer
+            right: 50,
+            bottom: bottomPadding,
+            left: 50
+        });
 
         // Handle single-point extreme zoom
         const listener = google.maps.event.addListenerOnce(map, "idle", () => {
