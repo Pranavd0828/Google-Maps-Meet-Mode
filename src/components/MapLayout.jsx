@@ -12,8 +12,9 @@ const MapLayout = ({ users, results, hoveredResultId, setMapInstance }) => {
     const options = useMemo(() => ({
         disableDefaultUI: false,
         zoomControl: true,
-        // Zoom is safe at RIGHT_BOTTOM now because the map container ends above the Sidebar
-        zoomControlOptions: { position: window.google.maps.ControlPosition.RIGHT_BOTTOM },
+        // In Split Layout (Map=45% height), RIGHT_CENTER is vertically centered in the top half (~22% screen y).
+        // This avoids the Search Bar (Top) and the Sidebar (Bottom). Safe zone.
+        zoomControlOptions: { position: window.google.maps.ControlPosition.RIGHT_CENTER },
         mapTypeControl: false,
         streetViewControl: false,
         fullscreenControl: false,
