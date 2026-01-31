@@ -21,18 +21,33 @@ const MapLayout = ({ users, results, hoveredResultId, setMapInstance }) => {
 
     const onUnmount = useCallback(() => setMap(null), []);
 
-    // Fit bounds
+    // Auto-Fit Bounds
     useEffect(() => {
-        if (map && users.some(u => u.pos)) {
-            const bounds = new window.google.maps.LatLngBounds();
+        if (!map) return;
 
-            users.forEach(u => {
-                if (u.pos) bounds.extend(u.pos);
-            });
+        const validUsers = users.filter(u => u.pos);
+        // Do not fit if empty
+        if (validUsers.length === 0 && results.length === 0) return;
 
-            results.forEach((r) => bounds.extend(r.geometry.location));
-            map.fitBounds(bounds, { padding: 50 });
-        }
+        const bounds = new window.google.maps.LatLngBounds();
+
+        // 1. Include Users
+        validUsers.forEach(u => bounds.extend(u.pos));
+
+        // 2. Include Results (if any)
+        results.forEach((r) => bounds.extend(r.geometry.location));
+
+        // 3. Fit Bounds
+        map.fitBounds(bounds, { padding: 80 }); // Increased padding for better visibility
+
+        // Handle single-point extreme zoom
+        const listener = google.maps.event.addListenerOnce(map, "idle", () => {
+            if (map.getZoom() > 15) {
+                map.setZoom(15);
+            }
+        });
+        return () => google.maps.event.removeListener(listener);
+
     }, [map, users, results]);
 
     const hoveredResult = useMemo(() =>
