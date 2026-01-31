@@ -50,17 +50,21 @@ const GoogleMapsShell = ({ viewMode, onToggleMeetMode }) => {
                         </div>
                     </div>
 
-                    {/* Category Pills - Responsive (Full Bleed Scroll on Mobile) */}
-                    <div className="flex gap-3 overflow-x-auto w-screen -ml-[12px] pl-[12px] pr-[12px] sm:w-[392px] sm:ml-0 sm:pl-1 sm:pr-0 scrollbar-hide pt-1">
-                        {['Restaurants', 'Hotels', 'Things to do', 'Museums', 'Transit', 'Pharmacies', 'ATMs'].map((cat, i) => (
-                            <button
-                                key={i}
-                                className="bg-white px-[14px] py-[6px] rounded-[18px] text-[14px] font-medium text-[#3c4043] hover:bg-[#f1f3f4] whitespace-nowrap pointer-events-auto transition-colors duration-200 border border-transparent flex-shrink-0"
-                                style={{ boxShadow: "0 1px 2px rgba(60,64,67,0.3), 0 2px 6px 2px rgba(60,64,67,0.15)" }}
-                            >
-                                {cat}
-                            </button>
-                        ))}
+                    {/* Category Pills - Responsive (Full Bleed Scroll on Mobile + Fade on Desktop) */}
+                    <div className="relative w-screen -ml-[12px] sm:ml-0 sm:w-[392px]">
+                        <div className="flex gap-3 overflow-x-auto w-full pl-[12px] pr-[12px] sm:pl-1 sm:pr-[40px] scrollbar-hide pt-1">
+                            {['Restaurants', 'Hotels', 'Things to do', 'Museums', 'Transit', 'Pharmacies', 'ATMs'].map((cat, i) => (
+                                <button
+                                    key={i}
+                                    className="bg-white px-[14px] py-[6px] rounded-[18px] text-[14px] font-medium text-[#3c4043] hover:bg-[#f1f3f4] whitespace-nowrap pointer-events-auto transition-colors duration-200 border border-transparent flex-shrink-0"
+                                    style={{ boxShadow: "0 1px 2px rgba(60,64,67,0.3), 0 2px 6px 2px rgba(60,64,67,0.15)" }}
+                                >
+                                    {cat}
+                                </button>
+                            ))}
+                        </div>
+                        {/* Right Fade Gradient (Desktop Visual Cue) */}
+                        <div className="absolute right-0 top-0 bottom-0 w-12 bg-gradient-to-l from-white via-white/80 to-transparent pointer-events-none z-10 sm:block hidden rounded-r-[24px]" />
                     </div>
                 </div>
             </div>
