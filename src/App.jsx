@@ -167,6 +167,18 @@ function App() {
     );
   }
 
+  const handleZoomIn = () => {
+    if (mapInstance) {
+      mapInstance.setZoom(mapInstance.getZoom() + 1);
+    }
+  };
+
+  const handleZoomOut = () => {
+    if (mapInstance) {
+      mapInstance.setZoom(mapInstance.getZoom() - 1);
+    }
+  };
+
   return (
     <div className="flex flex-col md:flex-row h-[100dvh] w-full overflow-hidden bg-white font-sans text-gray-900 relative">
 
@@ -176,7 +188,7 @@ function App() {
       {/* 2. Sidebar Container (Strict Split) */}
       {/* Mobile: Bottom 55dvh. Desktop: Left 400px. No overlap. */}
       <div
-        className={`relative z-20 bg-white shadow-xl transition-all duration-500 ease-in-out overflow-hidden
+        className={`relative z-20 bg-white shadow-xl overflow-hidden
           order-2 md:order-1
           flex-none
           w-full md:w-auto
@@ -206,7 +218,7 @@ function App() {
       {/* 3. Map Container (Strict Split) */}
       {/* Mobile: Top 45dvh. Desktop: Remaining width. */}
       <div
-        className={`relative z-0 bg-gray-100 transition-all duration-500 ease-in-out
+        className={`relative z-0 bg-gray-100
            order-1 md:order-2
            flex-none md:flex-auto
            w-full md:w-auto
@@ -219,6 +231,27 @@ function App() {
           setMapInstance={setMapInstance}
           viewMode={viewMode}
         />
+
+        {/* CUSTOM ZOOM CONTROLS (Guaranteed Visible) */}
+        {/* Placed relative to the Map Container, so on mobile it sits in the top 45dvh block. */}
+        {/* Right-Bottom of the MAP (not screen). */}
+        <div className="absolute bottom-6 right-4 flex flex-col gap-2 z-50 pointer-events-auto">
+          <button
+            onClick={handleZoomIn}
+            className="w-10 h-10 bg-white rounded shadow-md flex items-center justify-center text-gray-600 hover:text-black hover:bg-gray-50 focus:outline-none"
+            aria-label="Zoom In"
+          >
+            <div className="text-2xl font-light pb-1">+</div>
+          </button>
+          <button
+            onClick={handleZoomOut}
+            className="w-10 h-10 bg-white rounded shadow-md flex items-center justify-center text-gray-600 hover:text-black hover:bg-gray-50 focus:outline-none"
+            aria-label="Zoom Out"
+          >
+            <div className="text-2xl font-light pb-1">-</div>
+          </button>
+        </div>
+
       </div>
     </div>
   );

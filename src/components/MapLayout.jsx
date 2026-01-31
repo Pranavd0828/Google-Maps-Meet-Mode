@@ -11,10 +11,7 @@ const MapLayout = ({ users, results, hoveredResultId, setMapInstance, viewMode }
 
     const options = useMemo(() => ({
         disableDefaultUI: false,
-        zoomControl: true,
-        // In Split Layout (Map=45% height), RIGHT_CENTER is vertically centered in the top half (~22% screen y).
-        // This avoids the Search Bar (Top) and the Sidebar (Bottom). Safe zone.
-        zoomControlOptions: { position: window.google.maps.ControlPosition.RIGHT_CENTER },
+        zoomControl: false, // We use custom buttons in App.jsx
         mapTypeControl: false,
         streetViewControl: false,
         fullscreenControl: false,
@@ -35,7 +32,7 @@ const MapLayout = ({ users, results, hoveredResultId, setMapInstance, viewMode }
         const validUsers = users.filter(u => u.pos);
         if (validUsers.length === 0 && results.length === 0) return;
 
-        // Debounce to allow UI transitions (500ms CSS slide) to finish
+        // Transition is now instant (no CSS transition), so minimal delay is fine
         const timerId = setTimeout(() => {
             // Force Map Resize so it acknowledges the new 45% height
             window.google.maps.event.trigger(map, "resize");
@@ -58,7 +55,7 @@ const MapLayout = ({ users, results, hoveredResultId, setMapInstance, viewMode }
                     map.setZoom(15);
                 }
             });
-        }, 550); // Wait 550ms for CSS transition (500ms) to complete
+        }, 50); // Transition is instant, minimal tick needed
 
         return () => clearTimeout(timerId);
 
