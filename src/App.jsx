@@ -168,39 +168,49 @@ function App() {
   }
 
   return (
-    <div className="flex h-screen w-full overflow-hidden bg-white font-sans text-gray-900 relative">
+    <div className="flex h-screen w-full overflow-hidden bg-white font-sans text-gray-900 flex-col md:flex-row relative">
 
-      {/* 1. The Google Maps Shell (Standard UI + Toggle) */}
+      {/* 1. The Google Maps Shell (Floating Controls: Search Bar + Buttons) */}
+      {/* This sits on top of everything (z-50) because it's the global UI layer */}
       <GoogleMapsShell viewMode={viewMode} onToggleMeetMode={toggleMeetMode} />
 
-      {/* 2. The Meet Sidebar (Responsive: Bottom Sheet on Mobile, Sidebar on Desktop) */}
+      {/* 2. Sidebar Container (The "Bookshelf") */}
+      {/* Mobile: Bottom 55% (when active). Desktop: Left 408px (when active). */}
       <div
-        className={`absolute z-30 transition-transform duration-500 ease-in-out shadow-2xl
-          left-0 right-0 bottom-0 top-[45%] md:top-0 md:bottom-0 md:left-0 md:right-auto md:w-auto
+        className={`relative z-20 bg-white shadow-xl transition-all duration-500 ease-in-out overflow-hidden
+          order-2 md:order-1
+          w-full md:w-auto
           ${viewMode === 'meet'
-            ? 'translate-y-0 md:translate-x-0'
-            : 'translate-y-full md:-translate-x-full'
+            ? 'h-[55%] md:h-full md:basis-[408px]'
+            : 'h-0 md:h-full md:basis-0 md:w-0'
           }`}
       >
-        <Sidebar
-          users={users}
-          onUpdateUserPos={handleUpdateUserPos}
-          onAddUser={handleAddUser}
-          onRemoveUser={handleRemoveUser}
-          isCalculating={isCalculating}
-          onCalculate={handleCalculate}
-          results={results}
-          hoveredResultId={hoveredResultId}
-          setHoveredResultId={setHoveredResultId}
-          category={category}
-          setCategory={setCategory}
-        />
+        <div className="h-full w-full md:w-[408px]">
+          <Sidebar
+            users={users}
+            onUpdateUserPos={handleUpdateUserPos}
+            onAddUser={handleAddUser}
+            onRemoveUser={handleRemoveUser}
+            isCalculating={isCalculating}
+            onCalculate={handleCalculate}
+            results={results}
+            hoveredResultId={hoveredResultId}
+            setHoveredResultId={setHoveredResultId}
+            category={category}
+            setCategory={setCategory}
+          />
+        </div>
       </div>
 
-      {/* 3. The Map (Background) */}
-      {/* When in standard mode, it's just a full map. When in Meet mode, it's pushed or obscured slightly? 
-          Actually, Google Maps keeps the map static and slides panels over. We do the same. */}
-      <div className="flex-1 relative h-full w-full">
+      {/* 3. Map Container (The "Poster") */}
+      {/* Mobile: Top 45% (when active). Desktop: Fills remaining space. */}
+      {/* Crucial: It NEVER overlaps the Sidebar. It shrinks to fit. */}
+      <div
+        className={`relative z-0 bg-gray-100 transition-all duration-500 ease-in-out
+           order-1 md:order-2
+           w-full md:flex-1
+           ${viewMode === 'meet' ? 'h-[45%] md:h-full' : 'h-full'}`}
+      >
         <MapLayout
           users={users}
           results={results}

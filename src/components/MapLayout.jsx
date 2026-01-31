@@ -12,8 +12,8 @@ const MapLayout = ({ users, results, hoveredResultId, setMapInstance }) => {
     const options = useMemo(() => ({
         disableDefaultUI: false,
         zoomControl: true,
-        // Move zoom to RIGHT_TOP so it appears in the top-right corner (visible area on mobile)
-        zoomControlOptions: { position: window.google.maps.ControlPosition.RIGHT_TOP },
+        // Zoom is safe at RIGHT_BOTTOM now because the map container ends above the Sidebar
+        zoomControlOptions: { position: window.google.maps.ControlPosition.RIGHT_BOTTOM },
         mapTypeControl: false,
         streetViewControl: false,
         fullscreenControl: false,
@@ -27,61 +27,33 @@ const MapLayout = ({ users, results, hoveredResultId, setMapInstance }) => {
 
     const onUnmount = useCallback(() => setMap(null), []);
 
-    // Auto-Fit Bounds (Robust "Safety Valve" Pattern)
+    // Auto-Fit Bounds (Split Layout Pattern)
     useEffect(() => {
         if (!map) return;
 
         const validUsers = users.filter(u => u.pos);
         if (validUsers.length === 0 && results.length === 0) return;
 
-        // 1. Debounce to allow UI/Keyboard to settle
+        // Debounce to allow UI transitions to finish
         const timerId = setTimeout(() => {
             const bounds = new window.google.maps.LatLngBounds();
             validUsers.forEach(u => bounds.extend(u.pos));
             results.forEach((r) => bounds.extend(r.geometry.location));
 
-            // 2. Measure Exact Height (No Guessing)
-            const isMobile = window.innerWidth < 768;
-            const sidebarEl = document.getElementById('sidebar-container');
-            const sidebarHeight = sidebarEl ? sidebarEl.offsetHeight : 0;
-
-            // Mobile: Padding = Exact Sidebar Height + 50px Buffer
-            // Desktop: Standard 80px
-            const bottomPadding = isMobile ? (sidebarHeight + 50) : 80;
-
-            console.log(`[MapFit] Fitting bounds. Mobile: ${isMobile}, SidebarHeight: ${sidebarHeight}, Padding: ${bottomPadding}`);
-
+            // Standard comfortable padding since the Map container is now strictly only the visible area
             map.fitBounds(bounds, {
-                top: 60,
+                top: 50,
                 right: 50,
-                bottom: bottomPadding,
+                bottom: 50,
                 left: 50
             });
 
-            // 3. The "Idle" Listener (Audit & Correct)
+            // Handle single-point extreme zoom
             const listener = google.maps.event.addListenerOnce(map, "idle", () => {
-                const currentBounds = map.getBounds();
-                if (!currentBounds) return;
-
-                // A. Visibility Audit
-                // Check if ALL user points are actually inside the visible bounds
-                // Note: getBounds() returns the full map bounds (including under the sidebar),
-                // so strictly speaking 'contains' might return true even if under the sidebar.
-                // However, fitBounds with padding *should* have handled this.
-                // The 'safety valve' here catches cases where fitBounds failed due to weak signaling.
-
-                // If we want to be paranoid, we just trust fitBounds + padding. 
-                // But the user requested a zoom-out fallback if hidden.
-                // Since we can't easily detect "hidden under sidebar" with simple .contains() on the full map bounds,
-                // we mainly rely on step 2 (Exact Padding) to be correct.
-                // But we CAN check if they are totally off-screen or if zoom is too tight.
-
-                // B. Zoom Cap (Prevention)
                 if (map.getZoom() > 15) {
                     map.setZoom(15);
                 }
             });
-
         }, 300);
 
         return () => clearTimeout(timerId);
