@@ -50,8 +50,8 @@ const GoogleMapsShell = ({ viewMode, onToggleMeetMode }) => {
                         </div>
                     </div>
 
-                    {/* Category Pills - Responsive */}
-                    <div className="flex gap-3 overflow-x-auto w-[calc(100vw-24px)] sm:w-[392px] scrollbar-hide pt-1 pl-1">
+                    {/* Category Pills - Responsive (Full Bleed Scroll on Mobile) */}
+                    <div className="flex gap-3 overflow-x-auto w-screen -ml-[12px] pl-[12px] pr-[12px] sm:w-[392px] sm:ml-0 sm:pl-1 sm:pr-0 scrollbar-hide pt-1">
                         {['Restaurants', 'Hotels', 'Things to do', 'Museums', 'Transit', 'Pharmacies', 'ATMs'].map((cat, i) => (
                             <button
                                 key={i}
