@@ -40,7 +40,7 @@ const Sidebar = ({
     };
 
     return (
-        <div className="w-[408px] h-full bg-white shadow-xl z-20 flex flex-col font-sans relative">
+        <div className="w-full md:w-[408px] h-full bg-white shadow-xl z-20 flex flex-col font-sans relative">
 
             {/* Header / Input Stack */}
             <div className="p-4 bg-white z-20 relative border-b border-gray-100 flex-shrink-0">

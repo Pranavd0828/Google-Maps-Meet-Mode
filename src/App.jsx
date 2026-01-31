@@ -173,9 +173,13 @@ function App() {
       {/* 1. The Google Maps Shell (Standard UI + Toggle) */}
       <GoogleMapsShell viewMode={viewMode} onToggleMeetMode={toggleMeetMode} />
 
-      {/* 2. The Meet Sidebar (Slides in/out) */}
+      {/* 2. The Meet Sidebar (Responsive: Bottom Sheet on Mobile, Sidebar on Desktop) */}
       <div
-        className={`absolute top-0 left-0 bottom-0 z-30 transition-transform duration-500 ease-in-out ${viewMode === 'meet' ? 'translate-x-0 shadow-2xl' : '-translate-x-full shadow-none'
+        className={`absolute z-30 transition-transform duration-500 ease-in-out shadow-2xl
+          left-0 right-0 bottom-0 top-[45%] md:top-0 md:bottom-0 md:left-0 md:right-auto md:w-auto
+          ${viewMode === 'meet'
+            ? 'translate-y-0 md:translate-x-0'
+            : 'translate-y-full md:-translate-x-full'
           }`}
       >
         <Sidebar
