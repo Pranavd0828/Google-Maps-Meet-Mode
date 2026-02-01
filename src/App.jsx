@@ -192,7 +192,7 @@ function App() {
       {viewMode === 'meet' && (
         <div
           className={`fixed md:relative bottom-0 left-0 right-0 z-20 bg-white shadow-xl overflow-hidden
-          md:order-1 transition-transform duration-300 ease-out
+          md:order-1 transition-all duration-500 ease-[cubic-bezier(0.32,0.72,0,1)]
           flex-none
           w-full md:w-[400px]
           ${sheetMode === 'full' ? 'h-[100dvh]' : 'h-[55dvh]'}

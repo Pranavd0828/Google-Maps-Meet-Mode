@@ -34,9 +34,9 @@ const Sidebar = ({
         const touchEnd = e.changedTouches[0].clientY;
         const diff = touchEnd - touchStart;
 
-        // If swipe down > 50px, go to mid. If swipe up > 50px, go to full.
-        if (diff > 50) setSheetMode('mid');
-        if (diff < -50) setSheetMode('full');
+        // Snappier threshold: 30px is enough to trigger
+        if (diff > 30) setSheetMode('mid');
+        if (diff < -30) setSheetMode('full');
 
         setTouchStart(null);
     };
@@ -47,6 +47,14 @@ const Sidebar = ({
 
         // Physically snap the sheet down to show the map
         setSheetMode('mid');
+    };
+
+    // Robust hover handler that ignores "ghost" mouse leaves on touch interactions
+    const handleMouseLeave = () => {
+        // Only clear highlight if the device truly supports hover (mouse)
+        if (window.matchMedia('(hover: hover)').matches) {
+            setHoveredResultId(null);
+        }
     };
 
     // Google Design Tokens
@@ -231,7 +239,7 @@ const Sidebar = ({
                                 <div
                                     key={result.place_id}
                                     onMouseEnter={() => setHoveredResultId(result.place_id)}
-                                    onMouseLeave={() => setHoveredResultId(null)}
+                                    onMouseLeave={handleMouseLeave}
                                     onClick={() => handleResultClick(result)}
                                     className={`group border-b border-gray-100 p-4 cursor-pointer transition-colors relative hover:bg-[#f8f9fa] ${hoveredResultId === result.place_id ? 'bg-[#f8f9fa]' : ''}`}
                                 >
