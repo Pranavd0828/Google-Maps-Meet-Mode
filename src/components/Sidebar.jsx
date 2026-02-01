@@ -45,7 +45,7 @@ const Sidebar = ({
             {/* Header / Input Stack */}
             <div className="p-4 bg-white z-20 relative border-b border-gray-100 flex-shrink-0">
                 {/* Scrollable Input Area (Mobile specific restriction) */}
-                <div className="max-h-[200px] md:max-h-none overflow-y-auto pr-1 scrollbar-hide py-1">
+                <div className="max-h-[140px] md:max-h-none overflow-y-auto pr-1 scrollbar-hide py-1">
                     <div className="relative flex flex-col gap-3">
                         {/* Dynamic Connector Line */}
                         <div className="absolute left-[19px] top-[24px] bottom-[24px] w-0.5 border-l-2 border-dashed border-gray-300 z-0 opacity-50" />
