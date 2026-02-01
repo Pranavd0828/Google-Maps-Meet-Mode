@@ -12,6 +12,8 @@ const Sidebar = ({
     onCalculate,
     results,
     hoveredResultId,
+    setHoveredResultId,
+    category = 'restaurant',
     setCategory,
     sheetMode,
     setSheetMode

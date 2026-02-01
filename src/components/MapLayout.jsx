@@ -5,7 +5,7 @@ import { GoogleMap, Marker, Polyline, DirectionsRenderer } from '@react-google-m
 const mapContainerStyle = { width: '100%', height: '100%' };
 const defaultCenter = { lat: 40.7128, lng: -74.0060 };
 
-const MapLayout = ({ users, results, hoveredResultId, setMapInstance, viewMode }) => {
+const MapLayout = ({ users, results, hoveredResultId, setMapInstance, viewMode, sheetMode }) => {
     const [map, setMap] = useState(null);
     const [userDirections, setUserDirections] = useState({}); // { userId: directionResult }
 
