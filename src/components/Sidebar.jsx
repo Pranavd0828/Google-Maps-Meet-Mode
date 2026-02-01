@@ -23,11 +23,14 @@ const Sidebar = ({
 
     // Draggable Sheet Handlers (Mobile Only)
     const handleTouchStart = (e) => {
+        // Prevent map interaction while dragging handle
+        e.stopPropagation();
         setTouchStart(e.targetTouches[0].clientY);
     };
 
     const handleTouchEnd = (e) => {
         if (!touchStart) return;
+        e.stopPropagation();
         const touchEnd = e.changedTouches[0].clientY;
         const diff = touchEnd - touchStart;
 
@@ -39,8 +42,10 @@ const Sidebar = ({
     };
 
     const handleResultClick = (result) => {
-        // Highlighting is already handled by hover/selection state in parent
-        // but physically snap the sheet down to show the map
+        // Force the hover state to explicitly set the highlighted result
+        setHoveredResultId(result.place_id);
+
+        // Physically snap the sheet down to show the map
         setSheetMode('mid');
     };
 
@@ -70,7 +75,7 @@ const Sidebar = ({
 
             {/* Mobile Drag Handle */}
             <div
-                className="md:hidden w-full h-8 flex items-center justify-center cursor-ns-resize shrink-0"
+                className="md:hidden w-full h-12 flex items-center justify-center cursor-ns-resize shrink-0 z-50 touch-none"
                 onTouchStart={handleTouchStart}
                 onTouchEnd={handleTouchEnd}
             >
