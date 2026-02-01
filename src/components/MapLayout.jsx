@@ -41,11 +41,14 @@ const MapLayout = ({ users, results, hoveredResultId, setMapInstance, viewMode }
             validUsers.forEach(u => bounds.extend(u.pos));
             results.forEach((r) => bounds.extend(r.geometry.location));
 
-            // Standard comfortable padding since the Map container is now strictly only the visible area
+            // Padding adjustment for mobile bottom sheet (Overlay logic)
+            const isMobile = window.innerWidth < 768;
+            const bottomPadding = (isMobile && viewMode === 'meet') ? window.innerHeight * 0.55 + 20 : 50;
+
             map.fitBounds(bounds, {
                 top: 50,
                 right: 50,
-                bottom: 50,
+                bottom: bottomPadding,
                 left: 50
             });
 
@@ -59,7 +62,7 @@ const MapLayout = ({ users, results, hoveredResultId, setMapInstance, viewMode }
 
         return () => clearTimeout(timerId);
 
-    }, [map, users, results, viewMode]);
+    }, [map, users, results, viewMode, sheetMode]);
 
     const hoveredResult = useMemo(() =>
         results.find(r => r.place_id === hoveredResultId),

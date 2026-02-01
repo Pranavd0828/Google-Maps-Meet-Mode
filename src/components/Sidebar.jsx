@@ -12,11 +12,35 @@ const Sidebar = ({
     onCalculate,
     results,
     hoveredResultId,
-    setHoveredResultId,
-    category = 'restaurant',
     setCategory,
+    sheetMode,
+    setSheetMode
 }) => {
     const originRefs = useRef([]);
+    const [touchStart, setTouchStart] = useState(null);
+
+    // Draggable Sheet Handlers (Mobile Only)
+    const handleTouchStart = (e) => {
+        setTouchStart(e.targetTouches[0].clientY);
+    };
+
+    const handleTouchEnd = (e) => {
+        if (!touchStart) return;
+        const touchEnd = e.changedTouches[0].clientY;
+        const diff = touchEnd - touchStart;
+
+        // If swipe down > 50px, go to mid. If swipe up > 50px, go to full.
+        if (diff > 50) setSheetMode('mid');
+        if (diff < -50) setSheetMode('full');
+
+        setTouchStart(null);
+    };
+
+    const handleResultClick = (result) => {
+        // Highlighting is already handled by hover/selection state in parent
+        // but physically snap the sheet down to show the map
+        setSheetMode('mid');
+    };
 
     // Google Design Tokens
     const GOOGLE_BLUE = '#1a73e8';
@@ -41,6 +65,15 @@ const Sidebar = ({
 
     return (
         <div id="sidebar-container" className="w-full md:w-[408px] h-full bg-white shadow-xl z-20 flex flex-col font-sans relative">
+
+            {/* Mobile Drag Handle */}
+            <div
+                className="md:hidden w-full h-8 flex items-center justify-center cursor-ns-resize shrink-0"
+                onTouchStart={handleTouchStart}
+                onTouchEnd={handleTouchEnd}
+            >
+                <div className="w-12 h-1.5 bg-gray-300 rounded-full" />
+            </div>
 
             {/* Header / Input Stack */}
             <div className="p-4 bg-white z-20 relative border-b border-gray-100 flex-shrink-0">
@@ -192,6 +225,7 @@ const Sidebar = ({
                                     key={result.place_id}
                                     onMouseEnter={() => setHoveredResultId(result.place_id)}
                                     onMouseLeave={() => setHoveredResultId(null)}
+                                    onClick={() => handleResultClick(result)}
                                     className={`group border-b border-gray-100 p-4 cursor-pointer transition-colors relative hover:bg-[#f8f9fa] ${hoveredResultId === result.place_id ? 'bg-[#f8f9fa]' : ''}`}
                                 >
                                     <div className="flex gap-4">

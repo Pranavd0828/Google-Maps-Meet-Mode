@@ -18,6 +18,9 @@ function App() {
   // State: View Mode ('standard' = Google Maps, 'meet' = Our App)
   const [viewMode, setViewMode] = useState('standard');
 
+  // Sheet State for Mobile ('mid' or 'full')
+  const [sheetMode, setSheetMode] = useState('mid');
+
   // State: Multi-User Support (V2)
   const [users, setUsers] = useState([
     { id: 'you', label: 'You', color: '#1a73e8', pos: null },
@@ -185,17 +188,17 @@ function App() {
       {/* 1. Global Shell (Overlays) */}
       <GoogleMapsShell viewMode={viewMode} onToggleMeetMode={toggleMeetMode} />
 
-      {/* 2. Sidebar Container (Strict Split) - Only Render in Meet Mode */}
+      {/* 2. Sidebar Container (Strict Split/Overlay) - Only Render in Meet Mode */}
       {viewMode === 'meet' && (
         <div
-          className="relative z-20 bg-white shadow-xl overflow-hidden
-          order-2 md:order-1
+          className={`fixed md:relative bottom-0 left-0 right-0 z-20 bg-white shadow-xl overflow-hidden
+          md:order-1 transition-transform duration-300 ease-out
           flex-none
-          w-full md:w-auto
-          h-[55dvh] md:h-full md:w-[400px]"
+          w-full md:w-[400px]
+          ${sheetMode === 'full' ? 'h-[100dvh]' : 'h-[55dvh]'}
+          md:h-screen`}
         >
-          <div className="h-full w-full md:w-[400px]">
-            {/* Pass explicit height to Sidebar if needed, but h-full works */}
+          <div className="h-full w-full">
             <Sidebar
               users={users}
               onUpdateUserPos={handleUpdateUserPos}
@@ -208,19 +211,18 @@ function App() {
               setHoveredResultId={setHoveredResultId}
               category={category}
               setCategory={setCategory}
+              sheetMode={sheetMode}
+              setSheetMode={setSheetMode}
             />
           </div>
         </div>
       )}
 
-      {/* 3. Map Container (Strict Split) */}
-      {/* Mobile: Top 45dvh. Desktop: Remaining width. */}
+      {/* 3. Map Container */}
       <div
         className={`relative z-0 bg-gray-100
-           order-1 md:order-2
-           flex-none md:flex-auto
-           w-full md:w-auto
-           ${viewMode === 'meet' ? 'h-[45dvh] md:h-full' : 'h-[100dvh]'}`}
+           md:order-2 md:flex-auto
+           w-full h-full`}
       >
         <MapLayout
           users={users}
@@ -228,6 +230,7 @@ function App() {
           hoveredResultId={hoveredResultId}
           setMapInstance={setMapInstance}
           viewMode={viewMode}
+          sheetMode={sheetMode}
         />
 
         {/* CUSTOM ZOOM CONTROLS (Guaranteed Visible) */}
