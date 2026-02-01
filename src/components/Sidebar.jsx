@@ -44,47 +44,52 @@ const Sidebar = ({
 
             {/* Header / Input Stack */}
             <div className="p-4 bg-white z-20 relative border-b border-gray-100 flex-shrink-0">
-                <div className="relative flex flex-col gap-3">
-                    {/* Dynamic Connector Line */}
-                    <div className="absolute left-[19px] top-[24px] bottom-[24px] w-0.5 border-l-2 border-dashed border-gray-300 z-0 opacity-50" />
+                {/* Scrollable Input Area (Mobile specific restriction) */}
+                <div className="max-h-[200px] md:max-h-none overflow-y-auto pr-1 scrollbar-hide py-1">
+                    <div className="relative flex flex-col gap-3">
+                        {/* Dynamic Connector Line */}
+                        <div className="absolute left-[19px] top-[24px] bottom-[24px] w-0.5 border-l-2 border-dashed border-gray-300 z-0 opacity-50" />
 
-                    {users.map((user, index) => (
-                        <div key={user.id} className="group relative z-10 flex items-center gap-2">
-                            {/* Icon Indicator */}
-                            <div className="absolute left-3 top-1/2 -translate-y-1/2 flex items-center justify-center pointer-events-none z-20">
-                                <div className="w-5 h-5 rounded-full flex items-center justify-center bg-opacity-20" style={{ backgroundColor: user.color + '33' }}>
-                                    <div className="w-2.5 h-2.5 rounded-full" style={{ backgroundColor: user.color }} />
+                        {users.map((user, index) => (
+                            <div key={user.id} className="group relative z-10 flex items-center gap-2">
+                                {/* Icon Indicator */}
+                                <div className="absolute left-3 top-1/2 -translate-y-1/2 flex items-center justify-center pointer-events-none z-20">
+                                    <div className="w-5 h-5 rounded-full flex items-center justify-center bg-opacity-20" style={{ backgroundColor: user.color + '33' }}>
+                                        <div className="w-2.5 h-2.5 rounded-full" style={{ backgroundColor: user.color }} />
+                                    </div>
                                 </div>
-                            </div>
 
-                            {/* Input Field */}
-                            <Autocomplete
-                                onLoad={(ref) => (originRefs.current[index] = ref)}
-                                onPlaceChanged={() => handlePlaceSelect(index)}
-                                className="w-full"
-                            >
-                                <input
-                                    type="text"
-                                    placeholder={index === 0 ? "Starting point (You)" : `Friend ${index}'s location`}
-                                    className="w-full pl-10 pr-9 py-3 bg-white border border-transparent hover:border-gray-300 focus:border-blue-500 rounded-lg text-[15px] text-[#202124] placeholder:text-[#5f6368] focus:outline-none shadow-[0_1px_3px_rgba(0,0,0,0.1)] transition-all font-medium"
-                                />
-                            </Autocomplete>
-
-                            {/* Remove Button (only for Friend 2+) */}
-                            {index > 1 && (
-                                <button
-                                    onClick={() => onRemoveUser(index)}
-                                    className="p-2 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-full transition-colors absolute right-2 top-1/2 -translate-y-1/2"
-                                    title="Remove this friend"
+                                {/* Input Field */}
+                                <Autocomplete
+                                    onLoad={(ref) => (originRefs.current[index] = ref)}
+                                    onPlaceChanged={() => handlePlaceSelect(index)}
+                                    className="w-full"
                                 >
-                                    <X className="w-4 h-4" />
-                                </button>
-                            )}
-                        </div>
-                    ))}
+                                    <input
+                                        type="text"
+                                        placeholder={index === 0 ? "Starting point (You)" : `Friend ${index}'s location`}
+                                        className="w-full pl-10 pr-9 py-3 bg-white border border-transparent hover:border-gray-300 focus:border-blue-500 rounded-lg text-[15px] text-[#202124] placeholder:text-[#5f6368] focus:outline-none shadow-[0_1px_3px_rgba(0,0,0,0.1)] transition-all font-medium"
+                                    />
+                                </Autocomplete>
 
-                    {/* Button Row */}
-                    <div className="mt-4 flex items-center justify-between">
+                                {/* Remove Button (only for Friend 2+) */}
+                                {index > 1 && (
+                                    <button
+                                        onClick={() => onRemoveUser(index)}
+                                        className="p-2 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-full transition-colors absolute right-2 top-1/2 -translate-y-1/2"
+                                        title="Remove this friend"
+                                    >
+                                        <X className="w-4 h-4" />
+                                    </button>
+                                )}
+                            </div>
+                        ))}
+                    </div>
+                </div>
+
+                {/* Button Row & Categories - Pinned below inputs */}
+                <div className="mt-4">
+                    <div className="flex items-center justify-between">
                         <button
                             onClick={onAddUser}
                             className="flex items-center gap-2 text-[#1a73e8] font-medium text-[14px] hover:bg-blue-50 py-2 px-3 rounded-lg transition-colors border border-transparent hover:border-blue-100"
